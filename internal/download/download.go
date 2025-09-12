@@ -18,7 +18,7 @@
 //     See ParseParquet placeholder for a suggested approach.
 //   - The cache is a very simple file store keyed by the request URL.
 //   - Format preference defaults to cfg.PreferFormat but can be overridden per-call.
-package nflreadgo
+package download
 
 import (
 	"bytes"
