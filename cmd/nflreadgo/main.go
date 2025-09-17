@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"path/filepath"
 
 	"github.com/tyler180/nfl-data-go/internal/download"
 )
@@ -40,13 +39,38 @@ func main() {
 		log.Fatalf("Error parsing format: %v", err)
 	}
 
-	outputPath := filepath.Join(outputDir, file)
-	err = download.DownloadFile(repo, file, season, format, outputPath, force)
+	dl := download.GetDownloader()
+	b, usedURL, err := dl.Download(repo, file, &format, nil)
 	if err != nil {
 		log.Fatalf("Error downloading file: %v", err)
 	}
 
-	fmt.Printf("File downloaded successfully to %s\n", outputPath)
+	outputPath := fmt.Sprintf("%s/%s", outputDir, file)
+	err = os.WriteFile(outputPath, b, 0644)
+	if err != nil {
+		log.Fatalf("Error writing file: %v", err)
+	}
+
+	fmt.Printf("File downloaded successfully to %s (source URL: %s)\n", outputPath, usedURL)
+
+	// Alternative approach using DownloadFile:
+	// if outputDir == "" {
+	// 	outputDir = "."
+	// }
+	// if _, err := os.Stat(outputDir); os.IsNotExist(err) {
+	// 	err = os.MkdirAll(outputDir, 0755)
+	// 	if err != nil {
+	// 		log.Fatalf("Error creating output directory: %v", err)
+	// 	}
+	// }
+
+	// outputPath := filepath.Join(outputDir, file)
+	// err = download.DownloadFile(repo, file, season, format, outputPath, force)
+	// if err != nil {
+	// 	log.Fatalf("Error downloading file: %v", err)
+	// }
+
+	// fmt.Printf("File downloaded successfully to %s\n", outputPath)
 }
 
 // 		Timeout:      30 * time.Second,

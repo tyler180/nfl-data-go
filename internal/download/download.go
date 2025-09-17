@@ -1,3 +1,5 @@
+package download
+
 // Package nflreadgo provides data downloading functionality similar to the
 // Python NflverseDownloader in downloader.py. It supports repository-aware URL
 // building, format preference with automatic CSV<->Parquet fallback, a simple
@@ -18,7 +20,6 @@
 //     See ParseParquet placeholder for a suggested approach.
 //   - The cache is a very simple file store keyed by the request URL.
 //   - Format preference defaults to cfg.PreferFormat but can be overridden per-call.
-package download
 
 import (
 	"bytes"
@@ -46,6 +47,15 @@ const (
 	FormatParquet Format = iota
 	FormatCSV
 )
+
+var Default = NewDownloader(DefaultConfig())
+
+func Get() *Downloader { return Default }
+func Set(d *Downloader) {
+	if d != nil {
+		Default = d
+	}
+}
 
 func (f Format) String() string {
 	switch f {
@@ -346,6 +356,35 @@ func ParseParquet(b []byte) ([]map[string]any, error) {
 		}
 	}
 	return out, nil
+}
+
+// ParseAuto detects the format from the provided URL/filename and parses
+// the bytes into a unified []map[string]any for both CSV and Parquet.
+func ParseAuto(data []byte, usedURL string) ([]map[string]any, error) {
+	f, err := DetectFormatFromURL(usedURL)
+	if err != nil {
+		return nil, err
+	}
+	switch f {
+	case FormatParquet:
+		return ParseParquet(data)
+	case FormatCSV:
+		rows, err := CSVToMaps(data)
+		if err != nil {
+			return nil, err
+		}
+		out := make([]map[string]any, len(rows))
+		for i, r := range rows {
+			m := make(map[string]any, len(r))
+			for k, v := range r {
+				m[k] = v
+			}
+			out[i] = m
+		}
+		return out, nil
+	default:
+		return nil, fmt.Errorf("unknown format: %v", f)
+	}
 }
 
 // ---- Global singleton (optional), mirroring get_downloader() in Python ----
