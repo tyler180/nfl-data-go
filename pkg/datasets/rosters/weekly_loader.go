@@ -1,14 +1,24 @@
 package rosters
 
 import (
+	"fmt"
+
 	downloadpkg "github.com/tyler180/nfl-data-go/internal/download"
 )
 
-// LoadWeekly downloads the week-level rosters dataset and returns typed rows.
-// Source/tag: "weekly_rosters" in nflverse-data releases.
-// Asset base name is the same as the tag (e.g., weekly_rosters.parquet/csv).
 func LoadWeekly() ([]Roster, error) {
-	b, usedURL, err := downloadpkg.Get().Download("nflverse-data", "weekly_rosters/weekly_rosters", nil, nil)
+	return loadWeeklyHelper("weekly_rosters/weekly_rosters")
+}
+
+func LoadWeeklySeason(season int) ([]Roster, error) {
+	if season == 0 {
+		return LoadWeekly()
+	}
+	return loadWeeklyHelper(fmt.Sprintf("weekly_rosters/weekly_rosters_%d", season))
+}
+
+func loadWeeklyHelper(path string) ([]Roster, error) {
+	b, usedURL, err := downloadpkg.Get().Download("nflverse-data", path, nil, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -21,10 +31,4 @@ func LoadWeekly() ([]Roster, error) {
 		out = append(out, FromMap(r))
 	}
 	return out, nil
-}
-
-// LoadWeeklyRaw exposes the underlying bytes and provenance URL for the
-// week-level rosters dataset.
-func LoadWeeklyRaw() ([]byte, string, error) {
-	return downloadpkg.Get().Download("nflverse-data", "weekly_rosters/weekly_rosters", nil, nil)
 }

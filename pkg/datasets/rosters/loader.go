@@ -1,12 +1,22 @@
 package rosters
 
 import (
+	"fmt"
+
 	downloadpkg "github.com/tyler180/nfl-data-go/internal/download"
 )
 
-// Load downloads the season-level rosters dataset and returns typed rows.
-func Load() ([]Roster, error) {
-	b, usedURL, err := downloadpkg.Get().Download("nflverse-data", "rosters/rosters", nil, nil)
+func Load() ([]Roster, error) { return loadHelper("rosters/rosters") }
+
+func LoadSeason(season int) ([]Roster, error) {
+	if season == 0 {
+		return Load()
+	}
+	return loadHelper(fmt.Sprintf("rosters/rosters_%d", season))
+}
+
+func loadHelper(path string) ([]Roster, error) {
+	b, usedURL, err := downloadpkg.Get().Download("nflverse-data", path, nil, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -19,9 +29,4 @@ func Load() ([]Roster, error) {
 		out = append(out, FromMap(r))
 	}
 	return out, nil
-}
-
-// LoadRaw exposes the underlying bytes and provenance URL.
-func LoadRaw() ([]byte, string, error) {
-	return downloadpkg.Get().Download("nflverse-data", "rosters/rosters", nil, nil)
 }

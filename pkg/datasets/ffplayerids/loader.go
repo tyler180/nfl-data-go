@@ -7,12 +7,14 @@ import (
 // Load fetches the DynastyProcess player IDs table and returns typed rows.
 // Source: https://github.com/DynastyProcess/data (files/db_playerids.csv)
 func Load() ([]FFPlayerID, error) {
-	return loadHelper("DynastyProcess/data", "files/db_playerids")
+	// return loadHelper("dynastyprocess/data", "files/db_fpecr")
+	return loadHelper("dynastyprocess", "db_fpecr")
 }
 
 // LoadRaw returns the raw bytes and provenance URL.
 func LoadRaw() ([]byte, string, error) {
-	return downloadpkg.Get().Download("DynastyProcess/data", "files/db_playerids", nil, nil)
+	// return downloadpkg.Get().Download("dynastyprocess/data", "files/db_fpecr", nil, nil)
+	return downloadpkg.Get().Download("dynastyprocess", "db_fpecr", nil, nil)
 }
 
 func loadHelper(repo, path string) ([]FFPlayerID, error) {

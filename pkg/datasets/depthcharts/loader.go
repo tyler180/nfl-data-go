@@ -1,16 +1,20 @@
 package depthcharts
 
 import (
+	"fmt"
+
 	downloadpkg "github.com/tyler180/nfl-data-go/internal/download"
 )
 
-// Load downloads the depth charts dataset and returns typed rows.
-// Source/tag: "depth_charts" in nflverse-data.
-func Load() ([]DepthChart, error) {
-	return loadHelper("depth_charts/depth_charts")
+func Load() ([]DepthChart, error) { return loadHelper("depth_charts/depth_charts") }
+
+func LoadSeason(season int) ([]DepthChart, error) {
+	if season == 0 {
+		return Load()
+	}
+	return loadHelper(fmt.Sprintf("depth_charts/depth_charts_%d", season))
 }
 
-// LoadRaw exposes the underlying bytes and provenance URL.
 func LoadRaw() ([]byte, string, error) {
 	return downloadpkg.Get().Download("nflverse-data", "depth_charts/depth_charts", nil, nil)
 }

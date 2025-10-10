@@ -1,26 +1,41 @@
 package teamstats
 
 import (
+	"fmt"
+
 	downloadpkg "github.com/tyler180/nfl-data-go/internal/download"
 )
 
-// Load downloads the WEEK-level team stats dataset and returns typed rows.
-// Mirrors nflreadr::load_team_stats(summary_level = "week").
-func Load() ([]TeamStat, error) {
-	return loadHelper("stats_team/stats_team_week")
+// WEEK-level (default)
+func Load() ([]TeamStat, error) { return loadHelper("stats_team/stats_team_week") }
+
+// WEEK-level for a single season (e.g., stats_team_week_2024)
+func LoadForSeason(season int) ([]TeamStat, error) {
+	if season == 0 {
+		return Load()
+	}
+	return loadHelper(fmt.Sprintf("stats_team/stats_team_week_%d", season))
 }
 
-// LoadRaw returns the raw bytes and provenance URL for the WEEK-level dataset.
-func LoadRaw() ([]byte, string, error) {
-	return downloadpkg.Get().Download("nflverse-data", "stats_team/stats_team_week", nil, nil)
-}
-
-// Season summary helpers (optional). These correspond to REG, POST, and REG+POST.
+// Optional season summary helpers
 func LoadSeasonReg() ([]TeamStat, error)     { return loadHelper("stats_team/stats_team_reg") }
 func LoadSeasonPost() ([]TeamStat, error)    { return loadHelper("stats_team/stats_team_post") }
 func LoadSeasonRegPost() ([]TeamStat, error) { return loadHelper("stats_team/stats_team_reg_post") }
 
-// loadHelper fetches, auto-parses (Parquet/CSV), and maps rows -> TeamStat.
+func LoadSeasonRegForSeason(season int) ([]TeamStat, error) {
+	return loadHelper(fmt.Sprintf("stats_team/stats_team_reg_%d", season))
+}
+func LoadSeasonPostForSeason(season int) ([]TeamStat, error) {
+	return loadHelper(fmt.Sprintf("stats_team/stats_team_post_%d", season))
+}
+func LoadSeasonRegPostForSeason(season int) ([]TeamStat, error) {
+	return loadHelper(fmt.Sprintf("stats_team/stats_team_reg_post_%d", season))
+}
+
+func LoadRaw() ([]byte, string, error) {
+	return downloadpkg.Get().Download("nflverse-data", "stats_team/stats_team_week", nil, nil)
+}
+
 func loadHelper(path string) ([]TeamStat, error) {
 	b, usedURL, err := downloadpkg.Get().Download("nflverse-data", path, nil, nil)
 	if err != nil {

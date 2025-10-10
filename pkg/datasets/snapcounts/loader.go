@@ -1,13 +1,23 @@
 package snapcounts
 
 import (
+	"fmt"
+
 	downloadpkg "github.com/tyler180/nfl-data-go/internal/download"
 )
 
-// Load downloads the canonical nflverse snap counts dataset and returns
-// a typed slice. Parquet is preferred with CSV fallback via ParseAuto.
-func Load() ([]SnapCount, error) {
-	b, usedURL, err := downloadpkg.Get().Download("nflverse-data", "snap_counts/snap_counts_2024", nil, nil)
+func Load() ([]SnapCount, error) { return loadHelper("snap_counts/snap_counts") }
+
+func LoadSeason(season int) ([]SnapCount, error) {
+	if season == 0 {
+		return Load()
+	}
+	return loadHelper(fmt.Sprintf("snap_counts/snap_counts_%d", season))
+}
+
+func loadHelper(path string) ([]SnapCount, error) {
+	fmt.Printf("Loading snap counts from path: %s\n", path)
+	b, usedURL, err := downloadpkg.Get().Download("nflverse-data", path, nil, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -20,9 +30,4 @@ func Load() ([]SnapCount, error) {
 		out = append(out, FromMap(r))
 	}
 	return out, nil
-}
-
-// LoadRaw exposes the underlying bytes and URL used for snap counts.
-func LoadRaw() ([]byte, string, error) {
-	return downloadpkg.Get().Download("nflverse-data", "snap_counts/snap_counts", nil, nil)
 }

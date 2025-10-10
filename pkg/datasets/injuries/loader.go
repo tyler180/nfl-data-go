@@ -1,16 +1,22 @@
 package injuries
 
 import (
+	"fmt"
+
 	downloadpkg "github.com/tyler180/nfl-data-go/internal/download"
 )
 
-// Load downloads the injuries dataset and returns typed rows.
-// Mirrors nflreadr::load_injuries(); pulls from the nflverse-data release.
-func Load() ([]Injury, error) {
-	return loadHelper("injuries/injuries")
+// All seasons (combined file)
+func Load() ([]Injury, error) { return loadHelper("injuries/injuries") }
+
+// Single season (e.g., injuries_2024.parquet)
+func LoadSeason(season int) ([]Injury, error) {
+	if season == 0 {
+		return Load()
+	}
+	return loadHelper(fmt.Sprintf("injuries/injuries_%d", season))
 }
 
-// LoadRaw returns the raw bytes and provenance URL for the injuries dataset.
 func LoadRaw() ([]byte, string, error) {
 	return downloadpkg.Get().Download("nflverse-data", "injuries/injuries", nil, nil)
 }
