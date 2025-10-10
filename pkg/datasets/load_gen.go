@@ -6,8 +6,7 @@ import (
 	downloadpkg "github.com/tyler180/nfl-data-go/internal/download"
 )
 
-// (deleted the untyped Load(key Key) function)
-
+// LoadRaw returns the raw bytes and provenance URL for a dataset key.
 func LoadRaw(key Key) ([]byte, string, error) {
 	path, ok := pathByKey[key]
 	if !ok {
@@ -16,6 +15,7 @@ func LoadRaw(key Key) ([]byte, string, error) {
 	return downloadpkg.Get().Download("nflverse-data", path, nil, nil)
 }
 
+// LoadRows returns generic []map[string]any using the downloader's auto-parser.
 func LoadRows(key Key) ([]map[string]any, error) {
 	b, usedURL, err := LoadRaw(key)
 	if err != nil {
@@ -24,6 +24,7 @@ func LoadRows(key Key) ([]map[string]any, error) {
 	return downloadpkg.ParseAuto(b, usedURL)
 }
 
+// LoadAs provides a typed, generic loader given a mapper function.
 func LoadAs[T any](key Key, mapper func(map[string]any) T) ([]T, error) {
 	rows, err := LoadRows(key)
 	if err != nil {

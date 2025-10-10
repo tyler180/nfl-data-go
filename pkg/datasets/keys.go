@@ -14,11 +14,11 @@ const (
 	Injuries        Key = "injuries"
 )
 
-// pathByKey maps dataset keys to their nflverse-data repo paths.
+// pathByKey maps dataset keys to their nflverse-data repo paths (base names).
 var pathByKey = map[Key]string{
 	Players:         "players/players",
 	SnapCounts:      "snap_counts/snap_counts",
-	PlayerStats:     "player_stats/player_stats",
+	PlayerStats:     "player_stats/player_stats", // generic base (for legacy use)
 	Rosters:         "rosters/rosters",
 	RostersWeekly:   "weekly_rosters/weekly_rosters",
 	TeamStatsWeekly: "stats_team/stats_team_week",

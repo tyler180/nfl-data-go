@@ -1,22 +1,22 @@
 package snapcounts
 
 type SnapCount struct {
-	GameID            string `json:"game_id"`
-	PFRGID            string `json:"pfr_game_id"`
-	Season            int    `json:"season"`
-	Gametype          string `json:"game_type"` // e.g., REG, PRE, POST
-	Week              int    `json:"week"`
-	Player            string `json:"player"` // full name
-	PlayerID          string `json:"pfr_player_id"`
-	Position          string `json:"position"`
-	Team              string `json:"team"`
-	Opponent          string `json:"opponent"`
-	OffenseSnaps      int    `json:"offensive_snaps"`
-	OffensePct        int    `json:"offense_pct"`
-	DefenseSnaps      int    `json:"defensive_snaps"`
-	DefensePct        int    `json:"defense_pct"`
-	SpecialTeamsSnaps int    `json:"st_snaps"`
-	SpecialTeamsPct   int    `json:"st_pct"`
+	GameID            string  `json:"game_id"`
+	PFRGID            string  `json:"pfr_game_id"`
+	Season            int     `json:"season"`
+	Gametype          string  `json:"game_type"` // e.g., REG, PRE, POST
+	Week              int     `json:"week"`
+	Player            string  `json:"player"` // full name
+	PlayerID          string  `json:"pfr_player_id"`
+	Position          string  `json:"position"`
+	Team              string  `json:"team"`
+	Opponent          string  `json:"opponent"`
+	OffenseSnaps      int     `json:"offensive_snaps"`
+	OffensePct        float64 `json:"offense_pct"`
+	DefenseSnaps      int     `json:"defensive_snaps"`
+	DefensePct        float64 `json:"defense_pct"`
+	SpecialTeamsSnaps int     `json:"st_snaps"`
+	SpecialTeamsPct   float64 `json:"st_pct"`
 }
 
 // FromMap constructs a SnapCount from a generic map (e.g., from CSV or Parquet row).
@@ -87,11 +87,11 @@ func FromMap(row map[string]any) SnapCount {
 		Team:              getS("team"),
 		Opponent:          getS("opponent"),
 		OffenseSnaps:      getI("offensive_snaps"),
-		OffensePct:        int(getF("offense_pct")),
+		OffensePct:        getF("offense_pct"),
 		DefenseSnaps:      getI("defensive_snaps"),
-		DefensePct:        int(getF("defense_pct")),
+		DefensePct:        getF("defense_pct"),
 		SpecialTeamsSnaps: getI("st_snaps"),
-		SpecialTeamsPct:   int(getF("st_pct")),
+		SpecialTeamsPct:   getF("st_pct"),
 	}
 	return sc
 }
