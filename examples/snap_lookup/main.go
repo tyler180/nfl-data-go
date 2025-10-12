@@ -7,7 +7,7 @@ import (
 	"os"
 	"strings"
 
-	snaps "github.com/tyler180/nfl-data-go/pkg/datasets/snapcounts"
+	snaps "github.com/tyler180/nfl-data-go/datasets/snapcounts"
 )
 
 func main() {
