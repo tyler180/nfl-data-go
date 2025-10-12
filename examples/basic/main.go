@@ -8,17 +8,17 @@ import (
 	"os"
 	"strings"
 
+	"github.com/tyler180/nfl-data-go/datasets"
+	dchartpkg "github.com/tyler180/nfl-data-go/datasets/depthcharts"
+	ffpidpkg "github.com/tyler180/nfl-data-go/datasets/ffplayerids"
+	injpkg "github.com/tyler180/nfl-data-go/datasets/injuries"
+	playerpkg "github.com/tyler180/nfl-data-go/datasets/players"
+	pstatpkg "github.com/tyler180/nfl-data-go/datasets/playerstats"
+	rosterpkg "github.com/tyler180/nfl-data-go/datasets/rosters"
+	snappkg "github.com/tyler180/nfl-data-go/datasets/snapcounts"
+	tstatpkg "github.com/tyler180/nfl-data-go/datasets/teamstats"
 	configpkg "github.com/tyler180/nfl-data-go/internal/config"
 	downloadpkg "github.com/tyler180/nfl-data-go/internal/download"
-	"github.com/tyler180/nfl-data-go/pkg/datasets"
-	dchartpkg "github.com/tyler180/nfl-data-go/pkg/datasets/depthcharts"
-	ffpidpkg "github.com/tyler180/nfl-data-go/pkg/datasets/ffplayerids"
-	injpkg "github.com/tyler180/nfl-data-go/pkg/datasets/injuries"
-	playerpkg "github.com/tyler180/nfl-data-go/pkg/datasets/players"
-	pstatpkg "github.com/tyler180/nfl-data-go/pkg/datasets/playerstats"
-	rosterpkg "github.com/tyler180/nfl-data-go/pkg/datasets/rosters"
-	snappkg "github.com/tyler180/nfl-data-go/pkg/datasets/snapcounts"
-	tstatpkg "github.com/tyler180/nfl-data-go/pkg/datasets/teamstats"
 )
 
 func main() {
@@ -218,7 +218,7 @@ func main() {
 		printJSONRows(rowsToAny(rows, *limit))
 
 	case "players_components":
-		
+
 	default:
 		log.Fatalf("unknown dataset: %s (use players|snapcounts|playerstats|rosters|rosters_weekly|teamstats|depth_charts|injuries|ff_playerids)", *dataset)
 	}
@@ -266,15 +266,15 @@ func printJSONRows(v any) {
 
 // 	configpkg "github.com/tyler180/nfl-data-go/internal/config"
 // 	downloadpkg "github.com/tyler180/nfl-data-go/internal/download"
-// 	"github.com/tyler180/nfl-data-go/pkg/datasets"
-// 	dchartpkg "github.com/tyler180/nfl-data-go/pkg/datasets/depthcharts"
-// 	ffpidpkg "github.com/tyler180/nfl-data-go/pkg/datasets/ffplayerids"
-// 	injpkg "github.com/tyler180/nfl-data-go/pkg/datasets/injuries"
-// 	playerpkg "github.com/tyler180/nfl-data-go/pkg/datasets/players"
-// 	pstatpkg "github.com/tyler180/nfl-data-go/pkg/datasets/playerstats"
-// 	rosterpkg "github.com/tyler180/nfl-data-go/pkg/datasets/rosters"
-// 	snappkg "github.com/tyler180/nfl-data-go/pkg/datasets/snapcounts"
-// 	tstatpkg "github.com/tyler180/nfl-data-go/pkg/datasets/teamstats"
+// 	"github.com/tyler180/nfl-data-go/datasets"
+// 	dchartpkg "github.com/tyler180/nfl-data-go/datasets/depthcharts"
+// 	ffpidpkg "github.com/tyler180/nfl-data-go/datasets/ffplayerids"
+// 	injpkg "github.com/tyler180/nfl-data-go/datasets/injuries"
+// 	playerpkg "github.com/tyler180/nfl-data-go/datasets/players"
+// 	pstatpkg "github.com/tyler180/nfl-data-go/datasets/playerstats"
+// 	rosterpkg "github.com/tyler180/nfl-data-go/datasets/rosters"
+// 	snappkg "github.com/tyler180/nfl-data-go/datasets/snapcounts"
+// 	tstatpkg "github.com/tyler180/nfl-data-go/datasets/teamstats"
 // )
 
 // func main() {
@@ -487,12 +487,12 @@ func printJSONRows(v any) {
 
 // 	configpkg "github.com/tyler180/nfl-data-go/internal/config"
 // 	downloadpkg "github.com/tyler180/nfl-data-go/internal/download"
-// 	datasets "github.com/tyler180/nfl-data-go/pkg/datasets"
-// 	ffpkg "github.com/tyler180/nfl-data-go/pkg/datasets/ffplayerids"
-// 	inj "github.com/tyler180/nfl-data-go/pkg/datasets/injuries"
-// 	playerpkg "github.com/tyler180/nfl-data-go/pkg/datasets/players"
-// 	pstatpkg "github.com/tyler180/nfl-data-go/pkg/datasets/playerstats"
-// 	snappkg "github.com/tyler180/nfl-data-go/pkg/datasets/snapcounts"
+// 	datasets "github.com/tyler180/nfl-data-go/datasets"
+// 	ffpkg "github.com/tyler180/nfl-data-go/datasets/ffplayerids"
+// 	inj "github.com/tyler180/nfl-data-go/datasets/injuries"
+// 	playerpkg "github.com/tyler180/nfl-data-go/datasets/players"
+// 	pstatpkg "github.com/tyler180/nfl-data-go/datasets/playerstats"
+// 	snappkg "github.com/tyler180/nfl-data-go/datasets/snapcounts"
 // )
 
 // func main() {
