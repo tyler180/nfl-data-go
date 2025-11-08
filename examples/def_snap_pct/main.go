@@ -2,6 +2,7 @@
 package main
 
 import (
+	"context"
 	"encoding/csv"
 	"flag"
 	"fmt"
@@ -10,7 +11,7 @@ import (
 	"sort"
 	"strings"
 
-	snaps "github.com/tyler180/nfl-data-go/datasets/snapcounts"
+	snaps "github.com/tyler180/nfl-data-go/internal/datasets/snapcounts"
 )
 
 func main() {
@@ -22,7 +23,8 @@ func main() {
 	out := flag.String("out", "", "optional: write CSV to this path instead of stdout")
 	flag.Parse()
 
-	rows, err := snaps.LoadSeason(*season)
+	ctx := context.Background()
+	rows, err := snaps.LoadSeason(ctx, *season)
 	if err != nil {
 		log.Fatalf("snapcounts.LoadSeason(%d): %v", *season, err)
 	}

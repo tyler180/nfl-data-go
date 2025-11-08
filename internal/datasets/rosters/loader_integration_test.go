@@ -4,19 +4,20 @@
 package rosters
 
 import (
+	"context"
 	"strings"
 	"testing"
 )
 
-func TestLoadSeason_Rosters_Integration(t *testing.T) {
+func TestLoadSeason_Rosters_Integration(ctx context.Context, t *testing.T) {
 	year := 2024
-	rows, err := LoadSeason(year)
+	rows, err := LoadSeason(ctx, year)
 	if err != nil {
 		// Some releases don't publish per-season "rosters_<year>" files.
 		// If we see a 404, fallback to the base and at least assert non-empty.
 		if strings.Contains(err.Error(), "HTTP error 404") || strings.Contains(err.Error(), "404 Not Found") {
 			t.Logf("season-scoped rosters for %d not found; falling back to base", year)
-			rows, err = Load()
+			rows, err = Load(ctx)
 			if err != nil {
 				t.Fatalf("fallback Load() error: %v", err)
 			}
@@ -37,13 +38,13 @@ func TestLoadSeason_Rosters_Integration(t *testing.T) {
 	}
 }
 
-func TestLoadWeeklySeason_Rosters_Integration(t *testing.T) {
+func TestLoadWeeklySeason_Rosters_Integration(ctx context.Context, t *testing.T) {
 	year := 2024
-	rows, err := LoadWeeklySeason(year)
+	rows, err := LoadWeeklySeason(ctx, year)
 	if err != nil {
 		if strings.Contains(err.Error(), "HTTP error 404") || strings.Contains(err.Error(), "404 Not Found") {
 			t.Logf("season-scoped weekly_rosters for %d not found; falling back to base", year)
-			rows, err = LoadWeekly()
+			rows, err = LoadWeekly(ctx)
 			if err != nil {
 				t.Fatalf("fallback LoadWeekly() error: %v", err)
 			}

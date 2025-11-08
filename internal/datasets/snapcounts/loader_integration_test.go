@@ -3,11 +3,14 @@
 
 package snapcounts
 
-import "testing"
+import (
+	"context"
+	"testing"
+)
 
-func TestLoadSeason_SnapCounts_Integration(t *testing.T) {
+func TestLoadSeason_SnapCounts_Integration(ctx context.Context, t *testing.T) {
 	year := 2023
-	rows, err := LoadSeason(year)
+	rows, err := LoadSeason(ctx, year)
 	if err != nil {
 		t.Fatalf("LoadSeason(%d) error: %v", year, err)
 	}

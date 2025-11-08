@@ -2,6 +2,7 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"flag"
 	"fmt"
@@ -10,7 +11,7 @@ import (
 	"reflect"
 	"strings"
 
-	ffpid "github.com/tyler180/nfl-data-go/datasets/ffplayerids"
+	ffpid "github.com/tyler180/nfl-data-go/internal/datasets/ffplayerids"
 )
 
 // Heuristics for which struct fields we consider "IDs".
@@ -114,7 +115,8 @@ func main() {
 		os.Exit(2)
 	}
 
-	rows, err := ffpid.Load()
+	ctx := context.Background()
+	rows, err := ffpid.Load(ctx)
 	if err != nil {
 		log.Fatalf("ffplayerids.Load: %v", err)
 	}

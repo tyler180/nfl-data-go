@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"flag"
 	"fmt"
@@ -8,16 +9,16 @@ import (
 	"os"
 	"strings"
 
-	"github.com/tyler180/nfl-data-go/datasets"
-	dchartpkg "github.com/tyler180/nfl-data-go/datasets/depthcharts"
-	ffpidpkg "github.com/tyler180/nfl-data-go/datasets/ffplayerids"
-	injpkg "github.com/tyler180/nfl-data-go/datasets/injuries"
-	playerpkg "github.com/tyler180/nfl-data-go/datasets/players"
-	pstatpkg "github.com/tyler180/nfl-data-go/datasets/playerstats"
-	rosterpkg "github.com/tyler180/nfl-data-go/datasets/rosters"
-	snappkg "github.com/tyler180/nfl-data-go/datasets/snapcounts"
-	tstatpkg "github.com/tyler180/nfl-data-go/datasets/teamstats"
 	configpkg "github.com/tyler180/nfl-data-go/internal/config"
+	"github.com/tyler180/nfl-data-go/internal/datasets"
+	dchartpkg "github.com/tyler180/nfl-data-go/internal/datasets/depthcharts"
+	ffpidpkg "github.com/tyler180/nfl-data-go/internal/datasets/ffplayerids"
+	injpkg "github.com/tyler180/nfl-data-go/internal/datasets/injuries"
+	playerpkg "github.com/tyler180/nfl-data-go/internal/datasets/players"
+	pstatpkg "github.com/tyler180/nfl-data-go/internal/datasets/playerstats"
+	rosterpkg "github.com/tyler180/nfl-data-go/internal/datasets/rosters"
+	snappkg "github.com/tyler180/nfl-data-go/internal/datasets/snapcounts"
+	tstatpkg "github.com/tyler180/nfl-data-go/internal/datasets/teamstats"
 	downloadpkg "github.com/tyler180/nfl-data-go/internal/download"
 )
 
@@ -33,6 +34,7 @@ func main() {
 	)
 	flag.Parse()
 
+	ctx := context.Background()
 	// Configure the library at runtime
 	opts := []configpkg.ConfigOption{configpkg.WithVerbose(*verbose)}
 	switch strings.ToLower(*format) {
@@ -45,7 +47,7 @@ func main() {
 
 	switch *dataset {
 	case "players":
-		rows, err := datasets.LoadAs[playerpkg.Player](datasets.Players, playerpkg.FromMap)
+		rows, err := datasets.LoadAs[playerpkg.Player](ctx, datasets.Players, playerpkg.FromMap)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -58,9 +60,9 @@ func main() {
 			err  error
 		)
 		if *season != 0 {
-			rows, err = snappkg.LoadSeason(*season)
+			rows, err = snappkg.LoadSeason(ctx, *season)
 		} else {
-			rows, err = snappkg.Load()
+			rows, err = snappkg.Load(ctx)
 		}
 		if err != nil {
 			log.Fatal(err)
@@ -80,9 +82,9 @@ func main() {
 			err  error
 		)
 		if *season != 0 {
-			rows, err = pstatpkg.LoadForSeason(*season) // week-level per-season file
+			rows, err = pstatpkg.LoadForSeason(ctx, *season) // week-level per-season file
 		} else {
-			rows, err = pstatpkg.Load() // all seasons (week-level)
+			rows, err = pstatpkg.Load(ctx) // all seasons (week-level)
 		}
 		if err != nil {
 			log.Fatal(err)
@@ -105,9 +107,9 @@ func main() {
 			err  error
 		)
 		if *season != 0 {
-			rows, err = tstatpkg.LoadForSeason(*season) // week-level per-season file
+			rows, err = tstatpkg.LoadForSeason(ctx, *season) // week-level per-season file
 		} else {
-			rows, err = tstatpkg.Load() // all seasons (week-level)
+			rows, err = tstatpkg.Load(ctx) // all seasons (week-level)
 		}
 		if err != nil {
 			log.Fatal(err)
@@ -130,9 +132,9 @@ func main() {
 			err  error
 		)
 		if *season != 0 {
-			rows, err = rosterpkg.LoadSeason(*season)
+			rows, err = rosterpkg.LoadSeason(ctx, *season)
 		} else {
-			rows, err = rosterpkg.Load()
+			rows, err = rosterpkg.Load(ctx)
 		}
 		if err != nil {
 			log.Fatal(err)
@@ -146,9 +148,9 @@ func main() {
 			err  error
 		)
 		if *season != 0 {
-			rows, err = rosterpkg.LoadWeeklySeason(*season)
+			rows, err = rosterpkg.LoadWeeklySeason(ctx, *season)
 		} else {
-			rows, err = rosterpkg.LoadWeekly()
+			rows, err = rosterpkg.LoadWeekly(ctx)
 		}
 		if err != nil {
 			log.Fatal(err)
@@ -190,9 +192,9 @@ func main() {
 			err  error
 		)
 		if *season != 0 {
-			rows, err = injpkg.LoadSeason(*season)
+			rows, err = injpkg.LoadSeason(ctx, *season)
 		} else {
-			rows, err = injpkg.Load()
+			rows, err = injpkg.Load(ctx)
 		}
 		if err != nil {
 			log.Fatal(err)
@@ -210,7 +212,7 @@ func main() {
 		printJSONRows(rowsToAny(rows, *limit))
 
 	case "ff_playerids":
-		rows, err := ffpidpkg.Load()
+		rows, err := ffpidpkg.Load(ctx)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -266,15 +268,15 @@ func printJSONRows(v any) {
 
 // 	configpkg "github.com/tyler180/nfl-data-go/internal/config"
 // 	downloadpkg "github.com/tyler180/nfl-data-go/internal/download"
-// 	"github.com/tyler180/nfl-data-go/datasets"
-// 	dchartpkg "github.com/tyler180/nfl-data-go/datasets/depthcharts"
-// 	ffpidpkg "github.com/tyler180/nfl-data-go/datasets/ffplayerids"
-// 	injpkg "github.com/tyler180/nfl-data-go/datasets/injuries"
-// 	playerpkg "github.com/tyler180/nfl-data-go/datasets/players"
-// 	pstatpkg "github.com/tyler180/nfl-data-go/datasets/playerstats"
-// 	rosterpkg "github.com/tyler180/nfl-data-go/datasets/rosters"
-// 	snappkg "github.com/tyler180/nfl-data-go/datasets/snapcounts"
-// 	tstatpkg "github.com/tyler180/nfl-data-go/datasets/teamstats"
+// 	"github.com/tyler180/nfl-data-go/internal/datasets"
+// 	dchartpkg "github.com/tyler180/nfl-data-go/internal/datasets/depthcharts"
+// 	ffpidpkg "github.com/tyler180/nfl-data-go/internal/datasets/ffplayerids"
+// 	injpkg "github.com/tyler180/nfl-data-go/internal/datasets/injuries"
+// 	playerpkg "github.com/tyler180/nfl-data-go/internal/datasets/players"
+// 	pstatpkg "github.com/tyler180/nfl-data-go/internal/datasets/playerstats"
+// 	rosterpkg "github.com/tyler180/nfl-data-go/internal/datasets/rosters"
+// 	snappkg "github.com/tyler180/nfl-data-go/internal/datasets/snapcounts"
+// 	tstatpkg "github.com/tyler180/nfl-data-go/internal/datasets/teamstats"
 // )
 
 // func main() {
@@ -487,12 +489,12 @@ func printJSONRows(v any) {
 
 // 	configpkg "github.com/tyler180/nfl-data-go/internal/config"
 // 	downloadpkg "github.com/tyler180/nfl-data-go/internal/download"
-// 	datasets "github.com/tyler180/nfl-data-go/datasets"
-// 	ffpkg "github.com/tyler180/nfl-data-go/datasets/ffplayerids"
-// 	inj "github.com/tyler180/nfl-data-go/datasets/injuries"
-// 	playerpkg "github.com/tyler180/nfl-data-go/datasets/players"
-// 	pstatpkg "github.com/tyler180/nfl-data-go/datasets/playerstats"
-// 	snappkg "github.com/tyler180/nfl-data-go/datasets/snapcounts"
+// 	datasets "github.com/tyler180/nfl-data-go/internal/datasets"
+// 	ffpkg "github.com/tyler180/nfl-data-go/internal/datasets/ffplayerids"
+// 	inj "github.com/tyler180/nfl-data-go/internal/datasets/injuries"
+// 	playerpkg "github.com/tyler180/nfl-data-go/internal/datasets/players"
+// 	pstatpkg "github.com/tyler180/nfl-data-go/internal/datasets/playerstats"
+// 	snappkg "github.com/tyler180/nfl-data-go/internal/datasets/snapcounts"
 // )
 
 // func main() {
