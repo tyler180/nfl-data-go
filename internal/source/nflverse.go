@@ -6,7 +6,7 @@ import (
 	"sort"
 )
 
-const defaultSnapPerSeasonPattern = "https://raw.githubusercontent.com/nflverse/nflverse-data/master/data/snap_counts/snap_counts_%d.csv"
+const defaultSnapPerSeasonPattern = "https://github.com/nflverse/nflverse-data/releases/download/snap_counts/snap_counts_%d.csv"
 
 // NFLVerseSnapCountURLs returns URLs for the given seasons.
 // If NFLREADGO_SNAP_URL is set, it returns exactly that single URL.
