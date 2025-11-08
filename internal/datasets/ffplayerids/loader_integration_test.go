@@ -4,12 +4,13 @@
 package ffplayerids
 
 import (
+	"context"
 	"strings"
 	"testing"
 )
 
-func TestLoad_FFPlayerIDs_Integration(t *testing.T) {
-	rows, err := Load()
+func TestLoad_FFPlayerIDs_Integration(ctx context.Context, t *testing.T) {
+	rows, err := Load(ctx)
 	if err != nil {
 		// If the downloader hasn't been configured for DynastyProcess/data yet,
 		// skip the test with a clear hint rather than failing the whole suite.

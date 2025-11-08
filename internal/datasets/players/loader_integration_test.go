@@ -3,10 +3,13 @@
 
 package players
 
-import "testing"
+import (
+	"context"
+	"testing"
+)
 
-func TestLoad_Players_Integration(t *testing.T) {
-	rows, err := Load()
+func TestLoad_Players_Integration(ctx context.Context, t *testing.T) {
+	rows, err := Load(ctx)
 	if err != nil {
 		t.Fatalf("Load() error: %v", err)
 	}

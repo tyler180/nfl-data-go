@@ -1,13 +1,14 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"flag"
 	"log"
 	"os"
 	"strings"
 
-	snaps "github.com/tyler180/nfl-data-go/datasets/snapcounts"
+	snaps "github.com/tyler180/nfl-data-go/internal/datasets/snapcounts"
 )
 
 func main() {
@@ -26,8 +27,9 @@ func main() {
 		log.Fatal("provide either -pfr_id or -name (and optionally -team)")
 	}
 
+	ctx := context.Background()
 	// Load per-season file for performance.
-	rows, err := snaps.LoadSeason(*season)
+	rows, err := snaps.LoadSeason(ctx, *season)
 	if err != nil {
 		log.Fatalf("snapcounts.LoadSeason(%d): %v", *season, err)
 	}

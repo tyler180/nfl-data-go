@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"encoding/csv"
 	"flag"
 	"fmt"
@@ -9,7 +10,7 @@ import (
 	"sort"
 	"strings"
 
-	snaps "github.com/tyler180/nfl-data-go/datasets/snapcounts"
+	snaps "github.com/tyler180/nfl-data-go/internal/datasets/snapcounts"
 )
 
 func main() {
@@ -18,7 +19,9 @@ func main() {
 	team := flag.String("team", "", "optional team filter (e.g., KC)")
 	flag.Parse()
 
-	rows, err := snaps.LoadSeason(*season) // season-aware loader
+	ctx := context.Background()
+
+	rows, err := snaps.LoadSeason(ctx, *season) // season-aware loader
 	if err != nil {
 		log.Fatal(err)
 	}
