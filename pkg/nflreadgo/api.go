@@ -2,6 +2,7 @@ package nflreadgo
 
 import (
 	"context"
+	"fmt"
 	"sort"
 	"time"
 
@@ -95,6 +96,13 @@ func LoadSnapCounts(ctx context.Context, sel any, opts ...Option) ([]schema.Snap
 	}
 
 	urls := source.NFLVerseSnapCountURLs(selInt) // returns []string
+	if len(urls) > 0 {
+		for _, url := range urls {
+			fmt.Printf("url: %s", url)
+		}
+	} else {
+		return nil, fmt.Errorf("no URLs found for selection: %+v", sel)
+	}
 	var out []schema.SnapCount
 
 	for _, u := range urls {
